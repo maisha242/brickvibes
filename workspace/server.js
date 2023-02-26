@@ -1,13 +1,3 @@
-/**
- * This is an example of a basic node.js script that performs
- * the Authorization Code oAuth2 flow to authenticate against
- * the Spotify Accounts.
- *
- * For more information, read
- * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
- */
-
-
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var cors = require('cors');
@@ -20,13 +10,13 @@ const Configuration = oai.Configuration;
 const OpenAIApi = oai.OpenAIApi;
 
 //spotify
-var client_id = ""; // Your client id
-var client_secret = ''; // Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var client_id = process.env.CLIENT_ID;
+var client_secret =  process.env.CLIENT_SECRET;
+var redirect_uri = 'http://localhost:8888/callback';
 
-//twilio 
-const authToken = '';//process.env.TWILIO_AUTH_TOKEN;
-const accountSid = '';//process.env.TWILIO_ACCOUNT_SID;
+//twilio
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const client = require('twilio')(accountSid, authToken);
 
 var access_token;
@@ -49,7 +39,7 @@ var generateRandomString = function(length) {
   for (var i = 0; i < length; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
-  
+
   return text;
 };
 
@@ -60,8 +50,8 @@ var stateKey = 'spotify_auth_state';
 var app = express();
 
 app.use(express.static(__dirname + '/public'))
-   .use(cors())
-   .use(cookieParser());
+    .use(cors())
+    .use(cookieParser());
 
 app.get('/login2', async function(req, res) {
   var state = generateRandomString(16);
@@ -83,13 +73,13 @@ app.get('/login', function(req, res) {
   // your application requests authorization
   var scope = 'user-read-private user-read-email user-read-currently-playing user-read-recently-played';
   res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id: client_id,
-      scope: scope,
-      redirect_uri: redirect_uri,
-      state: state
-    }));
+      querystring.stringify({
+        response_type: 'code',
+        client_id: client_id,
+        scope: scope,
+        redirect_uri: redirect_uri,
+        state: state
+      }));
 });
 
 app.get('/callback', function(req, res) {
@@ -103,9 +93,9 @@ app.get('/callback', function(req, res) {
 
   if (state === null || state !== storedState) {
     res.redirect('/#' +
-      querystring.stringify({
-        error: 'state_mismatch'
-      }));
+        querystring.stringify({
+          error: 'state_mismatch'
+        }));
   } else {
     res.clearCookie(stateKey);
     var authOptions = {
@@ -149,9 +139,9 @@ app.get('/callback', function(req, res) {
         res.redirect('/recently-played?' + querystring.stringify({access_token: access_token}));
       } else {
         res.redirect('/#' +
-          querystring.stringify({
-            error: 'invalid_token'
-          }));
+            querystring.stringify({
+              error: 'invalid_token'
+            }));
       }
     });
   }
@@ -187,9 +177,9 @@ app.get('/recently-played', function(req, res) {
     url: url,
     headers: { 'Authorization': 'Bearer ' + req.query.access_token },
     json: true
-    };
+  };
   request.get(options, (error, response, body) => {
-    
+
     var songs = '';
     var c = 1;
     var tL = body.items.length - 1;
@@ -249,6 +239,23 @@ function sendSMS(message, recipientNumber) {
 }
 
 
+var options = {
+  index: "index.html"
+};
+
+app.use(express.static(__dirname + '/public', options))
+    .use(cors())
+    .use(cookieParser());
+
+app.use('/static', express.static('public'));
+
 
 console.log('Listening on 8888');
 app.listen(8888);
+
+
+/*// Listen to the App Engine-specified port, or 8888 otherwise
+const PORT = process.env.PORT || 8888;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}...`);
+});*/

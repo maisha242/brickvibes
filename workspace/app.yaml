@@ -1,0 +1,26 @@
+runtime: nodejs18
+
+env_variables:
+  CLIENT_ID: "6d9e10211db246258afcd20c5e8a5ab0"
+  CLIENT_SECRET: "3bfca93e55fd466084b2e49c051abd26"
+  OPENAI_KEY: "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"
+  TWILIO_ACCOUNT_SID: "AC51543edcf984036768026a598cb28400"
+  TWILIO_AUTH_TOKEN: "b50bae3473d478d83d87cda6650d6580"
+
+handlers:
+  - url: /brickvibes-img\.png
+    static_files: brickvibes-img.png
+    upload: brickvibes-img\.png
+
+  - url: /brickvibes-img\.jpg
+    static_files: brickvibes-img.jpg
+    upload: brickvibes-img\.jpg
+
+  - url: /static
+    static_dir: public
+
+  - url: /.*
+    secure: always
+    redirect_http_response_code: 301
+    script: auto
+  
