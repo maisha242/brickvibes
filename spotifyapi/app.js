@@ -176,17 +176,18 @@ app.get('/recently-played', function(req, res) {
     json: true
     };
   request.get(options, (error, response, body) => {
-    //var tL = body.items.track.length;
-    //var c = 0;
+    
     var songs = '';
+    var c = 1;
+    var tL = body.items.length - 1;
     body.items.forEach(i => {
       song = `${i.track.name} by`;
       i.track.artists.forEach(a => {
         song = song + ` ${a.name}`;
       })
-      songs += `${song}, `;
-      //songs += tL < c ? `${song}, ` : (tL == c ? `${song}, and ` : `${song}`);
-      //c++;
+      console.log(`tL:${tL} c:${c}`)
+      songs += tL > c ? `${song}, ` : (tL == c ? `${song}, and ` : `${song} `);
+      c+=1;
     })
     //res.send(songs);
     getTherapy(songs).then((resp)=> res.send(resp));
