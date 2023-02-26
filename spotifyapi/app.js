@@ -14,6 +14,7 @@ var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var oai = require('openai');
+var oaikey = require('./openapi.js');
 
 const Configuration = oai.Configuration;
 const OpenAIApi = oai.OpenAIApi;
@@ -27,7 +28,7 @@ const BASE_URL = 'https://api.spotify.com';
 
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: oaikey.OPENAPI_KEY,
 });
 const openai = new OpenAIApi(configuration);
 /**
@@ -208,9 +209,11 @@ async function getTherapy (song) {
     console.log(completion.data.choices[0].text);
     return completion.data.choices[0].text;
   } catch(error) {
-    // Consider adjusting the error handling logic for your use case
-    console.log("joe mama");
-    return "joe mama";
+    if (error.response) {
+      console.error(error.response.status, error.response.data);
+    } else {
+      console.error(`Error with OpenAI API request: ${error.message}`);
+    }
   }
 }
 
