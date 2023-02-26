@@ -129,11 +129,14 @@ app.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
-          querystring.stringify({
-            access_token: access_token,
-            refresh_token: refresh_token
-          }));
+        // res.redirect('/#' +
+        //   querystring.stringify({
+        //     access_token: access_token,
+        //     refresh_token: refresh_token
+        //   }));
+
+        // Immediate redirect to the recently-played endpoint with the access_token
+        res.redirect('/recently-played?' + querystring.stringify({access_token: access_token}));
       } else {
         res.redirect('/#' +
           querystring.stringify({
