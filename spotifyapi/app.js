@@ -20,13 +20,13 @@ const Configuration = oai.Configuration;
 const OpenAIApi = oai.OpenAIApi;
 
 //spotify
-var client_id = "---" // Your client id
-var client_secret = '---' // Your secret
-var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var client_id = "" // Your client id
+var client_secret = '' // Your secret
+var redirect_uri = ''; // Your redirect uri
 
 //twilio 
-const accountSid = '---';//process.env.TWILIO_ACCOUNT_SID;
-const authToken = '---';//process.env.TWILIO_AUTH_TOKEN;
+const authToken = '';//process.env.TWILIO_AUTH_TOKEN;
+const accountSid = '';//process.env.TWILIO_ACCOUNT_SID;
 const client = require('twilio')(accountSid, authToken);
 
 var access_token;
@@ -77,8 +77,8 @@ app.get('/login', function(req, res) {
 
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
-
-  phonenumber = document.getElementById('phonenum');
+  console.log(req.query);
+  phonenumber = req.query.phonenum;
 
   // your application requests authorization
   var scope = 'user-read-private user-read-email user-read-currently-playing user-read-recently-played';
