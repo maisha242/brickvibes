@@ -187,7 +187,8 @@ app.get('/recently-played', function(req, res) {
       //songs += tL < c ? `${song}, ` : (tL == c ? `${song}, and ` : `${song}`);
       //c++;
     })
-    res.send(songs);
+    //res.send(songs);
+    getTherapy(songs).then((resp)=> res.send(resp));
   });
 });
 async function getTherapy (song) {
@@ -214,8 +215,8 @@ async function getTherapy (song) {
 }
 
 function generatePrompt(song) {
-  return `roast my mood based on listening to the following song.
-  Song : ${song}
+  return `if you were a therapist, what would you say about my mental health based on me listening to the following songs?
+  Songs : ${song}
 `;
 }
 
