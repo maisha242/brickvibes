@@ -1,4 +1,4 @@
-# brickvibes
+# ![real logo](https://github.com/maisha242/brickvibes/blob/main/misc/brickvibes-removebg-preview.png) brickvibes
 
 ## Inspiration
 
