@@ -154,7 +154,19 @@ app.get('/recently-played', function(req, res) {
     json: true
     };
   request.get(options, (error, response, body) => {
-    res.send(body);
+    //var tL = body.items.track.length;
+    //var c = 0;
+    var songs = '';
+    body.items.forEach(i => {
+      song = `${i.track.name} by`;
+      i.track.artists.forEach(a => {
+        song = song + ` ${a.name}`;
+      })
+      songs += `${song}, `;
+      //songs += tL < c ? `${song}, ` : (tL == c ? `${song}, and ` : `${song}`);
+      //c++;
+    })
+    res.send(songs);
   });
 });
 
