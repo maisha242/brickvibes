@@ -19,9 +19,15 @@ var oaikey = require('./openapi.js');
 const Configuration = oai.Configuration;
 const OpenAIApi = oai.OpenAIApi;
 
-var client_id = "6d9e10211db246258afcd20c5e8a5ab0" // Your client id
-var client_secret = '3bfca93e55fd466084b2e49c051abd26' // Your secret
+//spotify
+var client_id = "---" // Your client id
+var client_secret = '---' // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+
+//twilio 
+const accountSid = '---';//process.env.TWILIO_ACCOUNT_SID;
+const authToken = '---';//process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken);
 
 var access_token;
 const BASE_URL = 'https://api.spotify.com';
@@ -47,6 +53,8 @@ var generateRandomString = function(length) {
   return text;
 };
 
+var phonenumber;
+
 var stateKey = 'spotify_auth_state';
 
 var app = express();
@@ -69,6 +77,8 @@ app.get('/login', function(req, res) {
 
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
+
+  phonenumber = document.getElementById('phonenum');
 
   // your application requests authorization
   var scope = 'user-read-private user-read-email user-read-currently-playing user-read-recently-played';
@@ -193,7 +203,7 @@ app.get('/recently-played', function(req, res) {
       c+=1;
     })
     //res.send(songs);
-    getTherapy(songs).then((resp)=> res.send(resp));
+    getTherapy(songs).then((resp)=> {res.send(resp), sendSMS(resp, phonenumber)} );
   });
 });
 async function getTherapy (song) {
@@ -226,6 +236,19 @@ function generatePrompt(song) {
   Songs : ${song}
 `;
 }
+
+//twilio
+function sendSMS(message, recipientNumber) {
+  client.messages
+      .create({
+        body: message,
+        from: '+15855492789',
+        to: recipientNumber
+      })
+      .then(message => console.log(message.sid));
+}
+
+
 
 console.log('Listening on 8888');
 app.listen(8888);

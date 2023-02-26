@@ -14,12 +14,31 @@
         width: 500px;
       }
     </style>
+        <script src="app.js"></script>
+
   </head>
 
   <body>
     <div class="container">
       <div id="login">
         <h1>This is an example of the Authorization Code flow</h1>
+        
+        <div id = "phonenum_box">
+          <form action="/login">
+            <label for="input-box">Enter some text:</label>
+            <input type="text" id="input-box" name="phonenum">
+          </form>
+
+          <button onclick="showText()">Show Text</button>
+      
+          <script>
+              function showText() {
+                  var inputText = document.getElementById("input-box").value;
+                  alert("Is this correct: " + inputText);
+              }
+          </script>
+        </div>
+
         <a href="/login" class="btn btn-primary">Log in with Spotify</a>
       </div>
       <div id="loggedin">
