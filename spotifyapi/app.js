@@ -7,16 +7,26 @@
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
 
+
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+var oai = require('openai');
+
+const Configuration = oai.Configuration;
+const OpenAIApi = oai.OpenAIApi;
 
 var client_id = '---'; // Your client id
 var client_secret = '---'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
+
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
@@ -29,6 +39,7 @@ var generateRandomString = function(length) {
   for (var i = 0; i < length; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
+  
   return text;
 };
 
@@ -39,6 +50,16 @@ var app = express();
 app.use(express.static(__dirname + '/public'))
    .use(cors())
    .use(cookieParser());
+
+app.get('/login2', async function(req, res) {
+  var state = generateRandomString(16);
+  res.cookie(stateKey, state);
+  var testTherapy = await getTherapy("Neon Lights");
+  console.log("did therapy");
+  console.log(testTherapy);
+  res.status(200).json({ result: testTherapy });
+});
+
 
 app.get('/login', function(req, res) {
 
@@ -142,6 +163,35 @@ app.get('/refresh_token', function(req, res) {
     }
   });
 });
+
+async function getTherapy (song) {
+
+  if (song.trim().length === 0) {
+    console.log("Please enter a valid song");
+    return "Please enter a valid song";
+  }
+
+  try {
+    const completion = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: generatePrompt(song),
+      temperature: 0.8,
+      max_tokens: 200
+    });
+    console.log(completion.data.choices[0].text);
+    return completion.data.choices[0].text;
+  } catch(error) {
+    // Consider adjusting the error handling logic for your use case
+    console.log("joe mama");
+    return "joe mama";
+  }
+}
+
+function generatePrompt(song) {
+  return `roast my mood based on listening to the following song.
+  Song : ${song}
+`;
+}
 
 console.log('Listening on 8888');
 app.listen(8888);
