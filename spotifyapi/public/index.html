@@ -27,9 +27,9 @@
           <form action="/login/">
             <label for="input-box">Enter some text:</label>
             <input type="text" id="input-box" name="phonenum">
-            <input type="Log in with spotify">
+            <input type="submit" class="btn btn-primary" value="Log in with Spotify">
           </form>
-
+          <!----
           <button onclick="showText()">Show Text</button>
       
           <script>
@@ -38,10 +38,11 @@
                   alert("Is this correct: " + inputText);
               }
           </script>
+          -->
         </div>
       
 
-        <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+        <!--<a href="/login" class="btn btn-primary">Log in with Spotify</a>-->
       </div>
       <div id="loggedin">
         <div id="user-profile">
@@ -50,11 +51,12 @@
         </div>
         <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
       </div>
-
+      <!----
       <div id = "login2">
         <a href="/login2" classs = "btn btn-primary">login2</a>
       </div>
     </div>
+  -->
 
     <script id="user-profile-template" type="text/x-handlebars-template">
       <h1>Logged in as {{display_name}}</h1>

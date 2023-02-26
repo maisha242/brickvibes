@@ -22,7 +22,7 @@ const OpenAIApi = oai.OpenAIApi;
 //spotify
 var client_id = "" // Your client id
 var client_secret = '' // Your secret
-var redirect_uri = ''; // Your redirect uri
+var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
 //twilio 
 const authToken = '';//process.env.TWILIO_AUTH_TOKEN;
