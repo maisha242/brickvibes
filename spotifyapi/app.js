@@ -150,7 +150,7 @@ app.get('/recently-played', function(req, res) {
   var url = BASE_URL + '/v1/me/player/recently-played';
   options = {
     url: url,
-    headers: { 'Authorization': 'Bearer ' + access_token },
+    headers: { 'Authorization': 'Bearer ' + req.query.access_token },
     json: true
     };
   request.get(options, (error, response, body) => {
