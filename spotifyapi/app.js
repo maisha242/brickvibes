@@ -17,6 +17,9 @@ var client_id = '---'; // Your client id
 var client_secret = '---'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
+var access_token;
+const BASE_URL = 'https://api.spotify.com';
+
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
@@ -46,7 +49,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email';
+  var scope = 'user-read-private user-read-email user-read-currently-playing user-read-recently-played';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -141,6 +144,20 @@ app.get('/refresh_token', function(req, res) {
       });
     }
   });
+});
+
+app.get('/recently-played', function(req, res) {
+  var url = BASE_URL + '/v1/me/player/recently-played';
+  options = {
+    url: url,
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+    };
+  request.get(options, (error, response, body) => {
+    console.log(body);
+  });
+
+  console.log("Get recently-played");
 });
 
 console.log('Listening on 8888');
